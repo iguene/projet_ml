@@ -1,0 +1,72 @@
+{
+  "timestamps_s": [
+    300,
+    600,
+    900
+  ],
+  "grid_size": 32,
+  "total_snapshots": 20,
+  "total_replays": 396,
+  "errors": 332,
+  "label_mapping": {
+    "0": "draw",
+    "1": "player1_wins",
+    "2": "player2_wins"
+  },
+  "heatmaps": {
+    "heatmap_t300s_p1.npy": {
+      "timestamp_s": 300,
+      "player": 1,
+      "shape": [
+        15,
+        32,
+        32
+      ]
+    },
+    "heatmap_t300s_p2.npy": {
+      "timestamp_s": 300,
+      "player": 2,
+      "shape": [
+        15,
+        32,
+        32
+      ]
+    },
+    "heatmap_t600s_p1.npy": {
+      "timestamp_s": 600,
+      "player": 1,
+      "shape": [
+        3,
+        32,
+        32
+      ]
+    },
+    "heatmap_t600s_p2.npy": {
+      "timestamp_s": 600,
+      "player": 2,
+      "shape": [
+        3,
+        32,
+        32
+      ]
+    },
+    "heatmap_t900s_p1.npy": {
+      "timestamp_s": 900,
+      "player": 1,
+      "shape": [
+        2,
+        32,
+        32
+      ]
+    },
+    "heatmap_t900s_p2.npy": {
+      "timestamp_s": 900,
+      "player": 2,
+      "shape": [
+        2,
+        32,
+        32
+      ]
+    }
+  }
+}
