@@ -1,5 +1,6 @@
 mod models;
 mod data;
+mod db;
 
 use models::linear::LinearModel;
 use models::mlp::MLP;
@@ -27,7 +28,8 @@ fn menu() -> String {
     println!("║  2. Entraîner — Régression Linéaire  ║");
     println!("║  3. Entraîner — MLP                  ║");
     println!("║  4. Inférence manuelle               ║");
-    println!("║  5. Quitter                          ║");
+    println!("║  5. Historique des entraînements     ║");
+    println!("║  6. Quitter                          ║");
     println!("╚══════════════════════════════════════╝");
     print!("Votre choix : ");
     io::stdout().flush().unwrap();
@@ -64,6 +66,7 @@ fn inference_manuelle(linear: &Option<LinearModel>, mlp: &Option<MLP>) {
 }
 
 fn main() {
+    let conn = db::ouvrir_base("projet_ml.db");
     let dataset = load_dataset();
     let mut linear_model: Option<LinearModel> = None;
     let mut mlp_model: Option<MLP> = None;
@@ -82,7 +85,12 @@ fn main() {
                     .collect();
                 let mut model = LinearModel::new(4);
                 model.train(&data_lin, 0.1, 1000);
-                println!("\n  Précision : {:.0}%", model.accuracy(&data_lin));
+                let precision = model.accuracy(&data_lin);
+                println!("\n  Précision : {:.0}%", precision);
+
+                let poids_json = serde_json::to_string(&model).unwrap();
+                db::sauvegarder_session(&conn, "Régression Linéaire", &poids_json, precision);
+
                 linear_model = Some(model);
             }
             "3" => {
@@ -92,13 +100,29 @@ fn main() {
                     .collect();
                 let mut model = MLP::new(123);
                 model.train(&data_mlp, 0.5, 2000);
-                println!("\n  Précision : {:.0}%", model.accuracy(&data_mlp));
+                let precision = model.accuracy(&data_mlp);
+                println!("\n  Précision : {:.0}%", precision);
+
+                let poids_json = serde_json::to_string(&model).unwrap();
+                db::sauvegarder_session(&conn, "MLP", &poids_json, precision);
+
                 mlp_model = Some(model);
             }
             "4" => {
                 inference_manuelle(&linear_model, &mlp_model);
             }
             "5" => {
+                println!("\n=== HISTORIQUE DES ENTRAÎNEMENTS ===\n");
+                let sessions = db::lister_sessions(&conn);
+                if sessions.is_empty() {
+                    println!("  Aucun entraînement enregistré pour l'instant.");
+                } else {
+                    for (id, type_modele, precision) in sessions {
+                        println!("  #{:<3} {:<22} précision : {:.0}%", id, type_modele, precision);
+                    }
+                }
+            }
+            "6" => {
                 println!("\nAu revoir !\n");
                 break;
             }

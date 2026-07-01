@@ -6,6 +6,9 @@ fn sigmoid_deriv(x: f64) -> f64 {
     sigmoid(x) * (1.0 - sigmoid(x))
 }
 
+use serde::{Deserialize, Serialize};
+
+#[derive(Serialize, Deserialize)]
 pub struct MLP {
     pub w_hidden: [[f64; 4]; 4],
     pub b_hidden: [f64; 4],

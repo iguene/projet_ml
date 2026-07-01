@@ -1,3 +1,6 @@
+use serde::{Deserialize, Serialize};
+
+#[derive(Serialize, Deserialize)]
 pub struct LinearModel {
     pub weights: Vec<f64>,
     pub bias: f64,
